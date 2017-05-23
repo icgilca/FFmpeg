@@ -1039,7 +1039,11 @@ static int udp_read(URLContext *h, uint8_t *buf, int size)
                 av_fifo_generic_read(s->fifo, buf, avail, NULL);
                 av_fifo_drain(s->fifo, AV_RL32(tmp) - avail);
                 pthread_mutex_unlock(&s->mutex);
-                return avail;
+                if (avail > 0){
+                    return avail;
+                } else {
+                    continue;
+                }
             } else if(s->circular_buffer_error){
                 int err = s->circular_buffer_error;
                 pthread_mutex_unlock(&s->mutex);
